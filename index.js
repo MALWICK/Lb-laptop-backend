@@ -7,9 +7,8 @@ require('dotenv').config();
 const PORT = process.env.PORT || 8000;
 dbConnect()
 
-app.use("/", (req,res) => {
-    res.send("Hello from server side!");
-})
+// Middleware to parse JSON request bodies
+app.use(express.json());
 
 app.use("/api/user", authRouter);
 app.listen(PORT,() => {
