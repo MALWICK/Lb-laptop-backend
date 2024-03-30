@@ -7,11 +7,15 @@ require('dotenv').config();
 const PORT = process.env.PORT || 8000;
 dbConnect()
 const authMiddleware = require("./middlewares/authMiddleware");
+const { notfound, errorHandler } = require('./middlewares/errorHandler');
 
 
 app.use(express.json());
 
 app.use("/api/user", authRouter);
+app.use(notfound)
+app.request(errorHandler);
+
 app.listen(PORT,() => {
     console.log(`Server is running on port ${PORT}`);
 });
