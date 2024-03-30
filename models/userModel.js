@@ -1,12 +1,14 @@
-const mongoose = require("mongoose"); // Erase if already required
 
-// Declare the Schema of the Mongo model
-var userSchema = new mongoose.Schema({
-  firstname: {
+
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+
+const userSchema = new mongoose.Schema({
+  firstName: {
     type: String,
     required: true,
   },
-  lastname: {
+  lastName: {
     type: String,
     required: true,
   },
@@ -15,7 +17,7 @@ var userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  mobile: {
+  phoneNumber: {
     type: String,
     required: true,
     unique: true,
@@ -24,7 +26,22 @@ var userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    enum: ['buyer', 'seller','admin'],
+    default: 'buyer',
+  },
 });
 
-//Export the model
-module.exports = mongoose.model("User", userSchema);
+userSchema.pre('save', async function (next) {
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(this.password, salt);
+    this.password = hashedPassword;
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+module.exports = mongoose.model('User', userSchema);
