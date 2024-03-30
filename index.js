@@ -7,7 +7,7 @@ require('dotenv').config();
 const PORT = process.env.PORT || 8000;
 dbConnect()
 
-// Middleware to parse JSON request bodies
+
 app.use(express.json());
 
 app.use("/api/user", authRouter);
