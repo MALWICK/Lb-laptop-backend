@@ -1,6 +1,5 @@
 const mongoose = require("mongoose"); // Erase if already required
-
-// Declare the Schema of the Mongo model
+const { options } = require("../routes/authRoutes");
 var userSchema = new mongoose.Schema({
   firstname: {
     type: String,
@@ -24,7 +23,28 @@ var userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: {
+      type: String,
+      enum: ["admin","manager","client"],
+      default: "client",
+    },
+    status: {
+      type: Number,
+      default: 0,
+    },
+  },
 });
 
-//Export the model
+userSchema.pre("save", function (next) {
+  if (this.role.type === "admin") {
+    this.role.status = "1";
+  } else if (this.role.type === "manager") {
+    this.role.status = "2";
+  } else {
+    this.role.status = "0";
+  }
+  next();
+});
+
 module.exports = mongoose.model("User", userSchema);
