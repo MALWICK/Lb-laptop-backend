@@ -1,6 +1,6 @@
 const express = require('express');
 const dbConnect = require('./config/dbConnect');
-const CookirParser=require('cookie-parser')
+const CookieParser=require('cookie-parser')
 const app = express();
 const authRouter = require('./routes/authRoutes');
 const midlewareAuth=require('./middlewares/authentication')
@@ -11,7 +11,7 @@ dbConnect()
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
-app.use(CookirParser())
+app.use(CookieParser())
 app.use("/api/user", authRouter);
 app.get('/',midlewareAuth.Auth,(req,res)=>{
     res.send({message:"ok",status:true})
